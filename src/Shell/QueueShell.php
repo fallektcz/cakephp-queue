@@ -438,18 +438,18 @@ TEXT;
 			'help' => 'Group',
 			'default' => '',
 		];
+		$subcommandParserFull['options']['dev'] = [
+			'short' => 'd',
+			'help' => 'Use dev server for DB connection.',
+			'boolean' => true,
+		];
+		$subcommandParserFull['options']['agency'] = [
+			'short' => 'a',
+			'help' => 'Suffix of agency DB name - the one after eventminder_a_.'
+		];
 
 		return parent::getOptionParser()
 			->description($this->_getDescription())
-			->addOption('dev', [
-				'short' => 'd',
-				'help' => __('Use dev server for DB connection.'),
-				'boolean' => true
-			])
-			->addOption('agency', [
-				'short' => 'a',
-				'help' => __('Sufix of agency DB name - the one after eventminder_a_.')
-			])
 			->addSubcommand('clean', [
 				'help' => 'Remove old jobs (cleanup)',
 				'parser' => $subcommandParser,
