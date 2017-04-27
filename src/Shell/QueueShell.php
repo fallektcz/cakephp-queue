@@ -74,6 +74,26 @@ class QueueShell extends Shell {
 		$this->QueuedJobs->initConfig();
 	}
 
+	public function startup()
+	{
+		parent::startup();
+		$agency = $this->param('agency');
+		if (!$agency)
+		{
+			$this->abort('Please enter value for --agency option');
+		}
+		if ($this->param('dev'))
+		{
+			ConnectionManager::drop('default');
+			ConnectionManager::alias('dev', 'default');
+		}
+		$dbConfig = ConnectionManager::get('default')->config();
+		$dbConfig['database'] = 'eventminder_a_'.$agency;
+		ConnectionManager::dropAlias('default');
+		ConnectionManager::drop('default');
+		ConnectionManager::config('default', $dbConfig);
+	}
+
 	/**
 	 * @return string
 	 */
@@ -421,6 +441,15 @@ TEXT;
 
 		return parent::getOptionParser()
 			->description($this->_getDescription())
+			->addOption('dev', [
+				'short' => 'd',
+				'help' => __('Use dev server for DB connection.'),
+				'boolean' => true
+			])
+			->addOption('agency', [
+				'short' => 'a',
+				'help' => __('Sufix of agency DB name - the one after eventminder_a_.')
+			])
 			->addSubcommand('clean', [
 				'help' => 'Remove old jobs (cleanup)',
 				'parser' => $subcommandParser,
