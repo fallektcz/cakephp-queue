@@ -6,6 +6,7 @@ use Cake\Console\Shell;
 use Cake\Core\App;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
+use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\Folder;
 use Cake\I18n\Number;
 use Cake\I18n\Time;
