@@ -12,6 +12,7 @@ use Cake\I18n\Number;
 use Cake\I18n\Time;
 use Cake\Log\Log;
 use Cake\Utility\Inflector;
+use Cake\ORM\TableRegistry;
 use Exception;
 
 declare(ticks = 1);
@@ -95,6 +96,8 @@ class QueueShell extends Shell {
 		ConnectionManager::dropAlias('default');
 		ConnectionManager::drop('default');
 		ConnectionManager::config('default', $dbConfig);
+		TableRegistry::clear();
+		$this->QueuedJobs = TableRegistry::get('Queue.QueuedJobs');
 	}
 
 	/**
