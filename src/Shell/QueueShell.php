@@ -90,6 +90,8 @@ class QueueShell extends Shell {
 		}
 		$dbConfig = ConnectionManager::get('default')->config();
 		$dbConfig['database'] = 'eventminder_a_'.$agency;
+		$dbConfig['className'] = 'Cake\Database\Connection';
+		unset($dbConfig['name']);
 		ConnectionManager::dropAlias('default');
 		ConnectionManager::drop('default');
 		ConnectionManager::config('default', $dbConfig);
