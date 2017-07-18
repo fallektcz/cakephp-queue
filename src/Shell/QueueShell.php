@@ -84,10 +84,18 @@ class QueueShell extends Shell {
 		{
 			$this->abort('Please enter value for --agency option');
 		}
-		if ($this->param('dev'))
+		$db_connection_name = $this->param('connection');
+		if ($db_connection_name !== 'default')
 		{
 			ConnectionManager::drop('default');
-			ConnectionManager::alias('dev', 'default');
+			try
+			{
+				ConnectionManager::alias($db_connection_name, 'default');
+			} catch (MissingDatasourceConfigException $e)
+			{
+				$this->out("<error>There is no datasource config named: " . $db_connection_name . "</error>");
+				exit();
+			}
 		}
 		$dbConfig = ConnectionManager::get('default')->config();
 		$dbConfig['database'] = 'eventminder_a_'.$agency;
@@ -444,10 +452,10 @@ TEXT;
 			'help' => 'Group',
 			'default' => '',
 		];
-		$subcommandParserFull['options']['dev'] = [
-			'short' => 'd',
-			'help' => 'Use dev server for DB connection.',
-			'boolean' => true,
+		$subcommandParserFull['options']['connection'] = [
+			'short' => 'c',
+			'help' => 'Name of the database connection to use. Defaults to live server',
+			'default' => 'default'
 		];
 		$subcommandParserFull['options']['agency'] = [
 			'short' => 'a',
